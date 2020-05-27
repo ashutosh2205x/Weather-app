@@ -15,12 +15,8 @@ const { width, height } = Dimensions.get("window");
 export default function App() {
   const [UIText, setText] = useState("");
   const [fullReport, setFullReport] = useState({});
-  const [weatherReportJSON, setJSON] = useState({});
-  const [otherInfoJSON, setOtherInfo] = useState({});
-  const [weatherJSON, setWeather] = useState([]);
-  const [windReport, setWindReport] = useState({});
   const [error, setErrorBool] = useState(false);
-  const [BCKGRND_THEME, SET_BCKGRND_THEME] = useState('') 
+  const [BCKGRND_THEME, SET_BCKGRND_THEME] = useState("");
   const api_key = "cb066f839e43094a1e31a972d44c88c6";
   function setTextFunc(text) {
     return setText(text);
@@ -79,10 +75,12 @@ export default function App() {
           <Text style={styles.text_portion}>
             Temp : {(fullReport.main.feels_like - 273.15).toFixed(1)} °C
             <Text style={{ color: "red" }}>
-              &nbsp; &nbsp; {(fullReport.main.temp_max - 273.15).toFixed(1)} °C &nbsp;
+              &nbsp; &nbsp; {(fullReport.main.temp_max - 273.15).toFixed(1)} °C
+              &nbsp;
             </Text>
             <Text style={{ color: "cyan" }}>
-            &nbsp; &nbsp; {(fullReport.main.temp_min - 273.15).toFixed(1)} °C &nbsp;
+              &nbsp; &nbsp; {(fullReport.main.temp_min - 273.15).toFixed(1)} °C
+              &nbsp;
             </Text>
           </Text>
           <Text style={styles.text_portion}>
@@ -101,21 +99,6 @@ export default function App() {
       ) : (
         <Text style={styles.error}>City not found!</Text>
       )}
-
-      {/* {!error && weatherJSON.length > 0 ? (
-        <>
-          <Text style={styles.text_portion}>
-            {JSON.stringify(weatherReportJSON)}
-          </Text>
-          <Text style={styles.text_portion}>
-            {JSON.stringify(otherInfoJSON)}
-          </Text>
-          <Text style={styles.text_portion}>{JSON.stringify(weatherJSON)}</Text>
-          <Text style={styles.text_portion}>{JSON.stringify(windReport)}</Text>
-        </>
-      ) : (
-      
-      )} */}
     </View>
   );
 }
