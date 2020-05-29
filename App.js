@@ -9,12 +9,15 @@ import {
 } from "react-native";
 import { HeaderText } from "./components/header";
 import { Video } from "expo-av";
+import GooglePlacesComponent from "./components/Google-auto-complete/google-auto-complete";
+import { WeatherReport } from "./components/weather-report/weather-report";
 
 const { width, height } = Dimensions.get("window");
 
 export default function App() {
   const [UIText, setText] = useState("");
   const [fullReport, setFullReport] = useState({});
+  const [LOCATION, SET_LOCATION] = useState([]);
   const [error, setErrorBool] = useState(false);
   const [BCKGRND_THEME, SET_BCKGRND_THEME] = useState("");
   const api_key = "cb066f839e43094a1e31a972d44c88c6";
@@ -31,21 +34,28 @@ export default function App() {
       .then((json) => {
         // console.log(json);
         if (json.cod === "404") {
+          console.log(json);
           return setErrorBool(true);
         } else {
           setFullReport(json);
-          console.log(fullReport);
-
           setErrorBool(false);
-          setJSON(json.main);
-          setOtherInfo(json.sys);
-          setWeather(json.weather);
-          setWindReport(json.wind);
+          console.log(fullReport);
         }
       })
       .catch((error) => {
         console.error(error);
       });
+  }
+
+  function getmyLocation() {
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        SET_LOCATION(pos.coords);
+        console.log("promise==>", pos.coords);
+        console.log("LOCATION==>", LOCATION);
+      },
+      { enableHighAccuracy: true }
+    );
   }
   return (
     <View style={styles.container}>
@@ -59,16 +69,17 @@ export default function App() {
         isLooping
         style={styles.backgroundVideo}
       />
-      <Text style={styles.header}>Weather Forecast App</Text>
+      <HeaderText />
       <View style={styles.inputcontainer}>
-        <TextInput
-          placeholder="Enter location"
-          style={styles.input}
-          onChangeText={setTextFunc}
-        />
-        <Button title="Search" onPress={consoleFunc} />
+        <GooglePlacesComponent />
+     
+        {/* <Button title="Search" onPress={consoleFunc} /> */}
+        <View>
+        <Button title="Find me" onPress={getmyLocation()} />
+        </View>
       </View>
-      {!error && Object.keys(fullReport).length > 0 ? (
+
+      {/* {!error && Object.keys(fullReport).length > 0 ? (
         <View style={styles.text_container}>
           <Text style={styles.header2}>{fullReport.name}</Text>
 
@@ -97,8 +108,9 @@ export default function App() {
           </Text>
         </View>
       ) : (
-        <Text style={styles.error}>City not found!</Text>
-      )}
+        <Text style={styles.error}> Not found {UIText}!</Text>
+      )} */}
+      <WeatherReport/>
     </View>
   );
 }
