@@ -7,7 +7,7 @@ const { width, height } = Dimensions.get("window");
 export const Snowflake = () => {
   return (
     <View>
-      <Video
+      {/* <Video
         source={require("../assets/snowflakes.mp4")}
         rate={1.0}
         volume={1.0}
@@ -16,7 +16,7 @@ export const Snowflake = () => {
         shouldPlay
         isLooping
         style={styles.backgroundVideo}
-      />
+      /> */}
     </View>
   );
 };

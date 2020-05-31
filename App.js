@@ -59,7 +59,7 @@ export default function App() {
   }
   return (
     <View style={styles.container}>
-      <Video
+      {/* <Video
         source={require("./assets/snowflakes.mp4")}
         rate={1.0}
         volume={1.0}
@@ -68,15 +68,15 @@ export default function App() {
         shouldPlay
         isLooping
         style={styles.backgroundVideo}
-      />
+      /> */}
       <HeaderText />
       <View style={styles.inputcontainer}>
         <GooglePlacesComponent />
      
         {/* <Button title="Search" onPress={consoleFunc} /> */}
-        <View>
-        <Button title="Find me" onPress={getmyLocation()} />
-        </View>
+        {/* <View>
+        <Button title="Find me" onPress={getmyLocation} />
+        </View> */}
       </View>
 
       {/* {!error && Object.keys(fullReport).length > 0 ? (
