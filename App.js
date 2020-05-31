@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -11,6 +11,7 @@ import { HeaderText } from "./components/header";
 import { Video } from "expo-av";
 import GooglePlacesComponent from "./components/Google-auto-complete/google-auto-complete";
 import { WeatherReport } from "./components/weather-report/weather-report";
+import { Weather_API } from "./api/api";
 
 const { width, height } = Dimensions.get("window");
 
@@ -25,38 +26,19 @@ export default function App() {
     return setText(text);
   }
 
-  function consoleFunc() {
-    console.log(UIText);
-    return fetch(
-      `https://api.openweathermap.org/data/2.5/weather?q=${UIText},in&appid=${api_key}`
-    )
-      .then((response) => response.json())
-      .then((json) => {
-        // console.log(json);
-        if (json.cod === "404") {
-          console.log(json);
-          return setErrorBool(true);
-        } else {
-          setFullReport(json);
-          setErrorBool(false);
-          console.log(fullReport);
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }
-
-  function getmyLocation() {
+  (function () {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
-        SET_LOCATION(pos.coords);
-        console.log("promise==>", pos.coords);
-        console.log("LOCATION==>", LOCATION);
+        if (LOCATION.length === 0)
+          return (
+            SET_LOCATION(pos.coords),
+            console.log("promise==>", pos.coords.latitude, ),
+            Weather_API(pos.coords.latitude, pos.coords.longitude)
+          );
       },
       { enableHighAccuracy: true }
     );
-  }
+  })();
   return (
     <View style={styles.container}>
       {/* <Video
@@ -72,45 +54,7 @@ export default function App() {
       <HeaderText />
       <View style={styles.inputcontainer}>
         <GooglePlacesComponent />
-     
-        {/* <Button title="Search" onPress={consoleFunc} /> */}
-        {/* <View>
-        <Button title="Find me" onPress={getmyLocation} />
-        </View> */}
       </View>
-
-      {/* {!error && Object.keys(fullReport).length > 0 ? (
-        <View style={styles.text_container}>
-          <Text style={styles.header2}>{fullReport.name}</Text>
-
-          <Text style={styles.text_portion}>
-            Temp : {(fullReport.main.feels_like - 273.15).toFixed(1)} °C
-            <Text style={{ color: "red" }}>
-              &nbsp; &nbsp; {(fullReport.main.temp_max - 273.15).toFixed(1)} °C
-              &nbsp;
-            </Text>
-            <Text style={{ color: "cyan" }}>
-              &nbsp; &nbsp; {(fullReport.main.temp_min - 273.15).toFixed(1)} °C
-              &nbsp;
-            </Text>
-          </Text>
-          <Text style={styles.text_portion}>
-            Humidity : {fullReport.main.humidity} %
-          </Text>
-          <Text style={styles.text_portion}>
-            Pressure : {(fullReport.main.pressure * 0.01).toFixed(2)} Pa
-          </Text>
-          <Text style={styles.text_portion}>
-            Sun rise : {Date(fullReport.sys.sunrise)}
-          </Text>
-          <Text style={styles.text_portion}>
-            Sun set : {Date(fullReport.sys.sunset)}
-          </Text>
-        </View>
-      ) : (
-        <Text style={styles.error}> Not found {UIText}!</Text>
-      )} */}
-      <WeatherReport/>
     </View>
   );
 }
