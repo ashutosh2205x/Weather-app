@@ -9,14 +9,15 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { LocationResultItem } from "./Location-item-results/LocationResult";
+import { GOOGLE_API_KEY } from "../../key";
 export default function GooglePlacesComponent() {
   const [Textbox, SET_TEXT_BOX] = useState("");
-  let textInput ='';
+  let textInput = "";
   return (
     <>
       <View style={styles.google}>
         <GoogleAutoComplete
-          apiKey="AIzaSyBZQpfjvJAaq5SpxHQ2jSiyE8itNmZ9DMg"
+          apiKey={GOOGLE_API_KEY}
           debounce={500}
           minLength={4}
         >

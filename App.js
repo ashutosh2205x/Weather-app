@@ -75,7 +75,7 @@ export default function App() {
      
         {/* <Button title="Search" onPress={consoleFunc} /> */}
         <View>
-        <Button title="Find me" onPress={getmyLocation()} />
+        <Button title="Find me" onPress={getmyLocation} />
         </View>
       </View>
 
