@@ -1,30 +1,44 @@
 import React from "react";
 import { StyleSheet, Text, View, TouchableOpacity, Alert } from "react-native";
-import { WeatherContext } from "../../api/api";
+import { WeatherContext } from "../../App";
 
 export const WeatherReport = () => {
-  console.log(data);
   return (
     <>
       <WeatherContext.Consumer>
-        {({ res }) => (
-          console.log("context=>", res),
-          (
-            <View style={styles.text_container}>
-              <Text style={styles.header2}>fullReport.name</Text>
+        {(res) => {
+          console.log("=> WeatherContext called", res);
+          if (Object.keys(res).length > 0)
+            return (
+              <View style={styles.text_container}>
+                <Text style={styles.header2}>{res.name}</Text>
 
-              <Text style={styles.text_portion}>
-                Temp : °C
-                <Text style={{ color: "red" }}>&nbsp; &nbsp; °C &nbsp;</Text>
-                <Text style={{ color: "cyan" }}>&nbsp; &nbsp; °C &nbsp;</Text>
-              </Text>
-              <Text style={styles.text_portion}>Humidity : %</Text>
-              <Text style={styles.text_portion}>Pressure : Pa</Text>
-              <Text style={styles.text_portion}>Sun rise :</Text>
-              <Text style={styles.text_portion}>Sun set :</Text>
-            </View>
-          )
-        )}
+                <Text style={styles.text_portion}>
+                  Temp : {(res.main.temp - 273.15).toFixed(1)} °C
+                  <Text style={{ color: "red" }}>
+                    &nbsp; &nbsp; {(res.main.temp_max - 273.15).toFixed(1)} °C
+                    &nbsp;
+                  </Text>
+                  <Text style={{ color: "cyan" }}>
+                    &nbsp; &nbsp; {(res.main.temp_min - 273.15).toFixed(1)} °C
+                    &nbsp;
+                  </Text>
+                </Text>
+                <Text style={styles.text_portion}>
+                  Humidity : {res.main.humidity} %
+                </Text>
+                <Text style={styles.text_portion}>
+                  Pressure : {res.main.pressure} Pa
+                </Text>
+                <Text style={styles.text_portion}>
+                  Sun rise : {Date(res.sys.sunrise)}
+                </Text>
+                <Text style={styles.text_portion}>
+                  Sun set : {Date(res.sys.sunset)}
+                </Text>
+              </View>
+            );
+        }}
       </WeatherContext.Consumer>
     </>
   );

@@ -15,30 +15,48 @@ import { Weather_API } from "./api/api";
 
 const { width, height } = Dimensions.get("window");
 
-export default function App() {
-  const [UIText, setText] = useState("");
-  const [fullReport, setFullReport] = useState({});
-  const [LOCATION, SET_LOCATION] = useState([]);
-  const [error, setErrorBool] = useState(false);
-  const [BCKGRND_THEME, SET_BCKGRND_THEME] = useState("");
-  const api_key = "cb066f839e43094a1e31a972d44c88c6";
-  function setTextFunc(text) {
-    return setText(text);
-  }
+export const WeatherContext = React.createContext({});
 
-  (function () {
+function GET_LOCATION() {
+  let EXPORT_DATA = {};
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      console.log(
+        "==> location called",
+        pos.coords.latitude,
+        pos.coords.longitude
+      );
+      Weather_API(pos.coords.latitude, pos.coords.longitude).then(
+        (data) => (EXPORT_DATA = data),
+        console.log("EXPORT_DATA", EXPORT_DATA)
+      );
+    },
+    { enableHighAccuracy: true }
+  );
+  return EXPORT_DATA;
+}
+
+export default function App() {
+  const [WEATHER_STATE, SET_WEATHER_STATE] = useState({});
+  const [BCKGRND_THEME, SET_BCKGRND_THEME] = useState("");
+
+  useEffect(() => {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
-        if (LOCATION.length === 0)
-          return (
-            SET_LOCATION(pos.coords),
-            console.log("promise==>", pos.coords.latitude, ),
-            Weather_API(pos.coords.latitude, pos.coords.longitude)
-          );
+        console.log(
+          "==> location called",
+          pos.coords.latitude,
+          pos.coords.longitude
+        );
+        Weather_API(pos.coords.latitude, pos.coords.longitude).then((data) => {
+          return SET_WEATHER_STATE(data);
+        });
       },
+      error => console.log('error message=>',error.message),
       { enableHighAccuracy: true }
     );
-  })();
+  }, []);
+
   return (
     <View style={styles.container}>
       {/* <Video
@@ -54,6 +72,9 @@ export default function App() {
       <HeaderText />
       <View style={styles.inputcontainer}>
         <GooglePlacesComponent />
+        <WeatherContext.Provider value={WEATHER_STATE}>
+          <WeatherReport />
+        </WeatherContext.Provider>
       </View>
     </View>
   );
@@ -86,7 +107,7 @@ const styles = StyleSheet.create({
   },
   inputcontainer: {
     width: "100%",
-    flexDirection: "row",
+    flexDirection: "column",
     justifyContent: "space-between",
     alignContent: "center",
     padding: 20,

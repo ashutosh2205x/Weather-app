@@ -4,7 +4,7 @@ import { StyleSheet, Text} from "react-native";
 
 export const HeaderText=()=>{
 return(
-<Text style={styles.header}>Weather App  v. {Math.random().toFixed(5)}</Text>
+<Text style={styles.header}>Weather App21  v. {Math.random().toFixed(5)}</Text>
 )
 }
 
