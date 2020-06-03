@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   StyleSheet,
   Text,
@@ -12,39 +12,19 @@ import { Video } from "expo-av";
 import GooglePlacesComponent from "./components/Google-auto-complete/google-auto-complete";
 import { WeatherReport } from "./components/weather-report/weather-report";
 import { Weather_API } from "./api/api";
-
-const { width, height } = Dimensions.get("window");
-
-export const WeatherContext = React.createContext({});
-
-function GET_LOCATION() {
-  let EXPORT_DATA = {};
-  navigator.geolocation.getCurrentPosition(
-    (pos) => {
-      console.log(
-        "==> location called",
-        pos.coords.latitude,
-        pos.coords.longitude
-      );
-      Weather_API(pos.coords.latitude, pos.coords.longitude).then(
-        (data) => (EXPORT_DATA = data),
-        console.log("EXPORT_DATA", EXPORT_DATA)
-      );
-    },
-    { enableHighAccuracy: true }
-  );
-  return EXPORT_DATA;
-}
+const { height } = Dimensions.get("window");
+import { WeatherContext } from "./api/apiContext";
 
 export default function App() {
   const [WEATHER_STATE, SET_WEATHER_STATE] = useState({});
+  const value = { WEATHER_STATE, SET_WEATHER_STATE };
   const [BCKGRND_THEME, SET_BCKGRND_THEME] = useState("");
-
+  // const { WEATHER_STATE, SET_WEATHER_STATE } = useContext(WeatherContext);
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         console.log(
-          "==> location called",
+          "geo location ==>",
           pos.coords.latitude,
           pos.coords.longitude
         );
@@ -52,31 +32,23 @@ export default function App() {
           return SET_WEATHER_STATE(data);
         });
       },
-      error => console.log('error message=>',error.message),
+      (error) => console.log("error message=>", error.message),
       { enableHighAccuracy: true }
     );
   }, []);
-
   return (
-    <View style={styles.container}>
-      {/* <Video
-        source={require("./assets/snowflakes.mp4")}
-        rate={1.0}
-        volume={1.0}
-        isMuted={true}
-        resizeMode="cover"
-        shouldPlay
-        isLooping
-        style={styles.backgroundVideo}
-      /> */}
-      <HeaderText />
-      <View style={styles.inputcontainer}>
-        <GooglePlacesComponent />
-        <WeatherContext.Provider value={WEATHER_STATE}>
-          <WeatherReport />
-        </WeatherContext.Provider>
+    <>
+      {console.log("app context=>", Object.keys(value.WEATHER_STATE).length)}
+      <View style={styles.container}>
+        <HeaderText />
+        <View style={styles.inputcontainer}>
+          <WeatherContext.Provider value={value}>
+            <GooglePlacesComponent />
+            <WeatherReport />
+          </WeatherContext.Provider>
+        </View>
       </View>
-    </View>
+    </>
   );
 }
 

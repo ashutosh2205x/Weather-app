@@ -7,12 +7,15 @@ import {
   ScrollView,
   Button,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { LocationResultItem } from "./Location-item-results/LocationResult";
 import { GOOGLE_API_KEY } from "../../key";
 import { Weather_API } from "../../api/api";
+import { WeatherContext } from "../../api/apiContext";
 
 const GooglePlacesComponent = () => {
+  const { WEATHER_STATE, SET_WEATHER_STATE } = useContext(WeatherContext);
+
   return (
     <GooglePlacesAutocomplete
       placeholder={Math.random().toFixed(5)}
@@ -40,7 +43,12 @@ const GooglePlacesComponent = () => {
         console.log("googlemaps=>", details.geometry.location);
         let lat = details.geometry.location.lat;
         let lon = details.geometry.location.lng;
-        return Weather_API(lat, lon);
+        return Weather_API(lat, lon).then((res)=>{
+          SET_WEATHER_STATE(res)
+        });
+      }}
+      onKeyPress={()=>{
+        console.log('googlemaps=>',WEATHER_STATE)
       }}
       query={{
         key: GOOGLE_API_KEY,
