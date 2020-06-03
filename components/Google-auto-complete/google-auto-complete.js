@@ -1,4 +1,4 @@
-import { GoogleAutoComplete } from "react-native-google-autocomplete";
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import {
   StyleSheet,
   Text,
@@ -7,51 +7,65 @@ import {
   ScrollView,
   Button,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { LocationResultItem } from "./Location-item-results/LocationResult";
 import { GOOGLE_API_KEY } from "../../key";
-export default function GooglePlacesComponent() {
-  const [Textbox, SET_TEXT_BOX] = useState("");
-  let textInput = "";
+import { Weather_API } from "../../api/api";
+import { WeatherContext } from "../../api/apiContext";
+
+const GooglePlacesComponent = () => {
+  const { WEATHER_STATE, SET_WEATHER_STATE } = useContext(WeatherContext);
+
   return (
-    <>
-      <View style={styles.google}>
-        <GoogleAutoComplete
-          apiKey={GOOGLE_API_KEY}
-          debounce={500}
-          minLength={4}
-        >
-          {({ handleTextChange, locationResults, fetchDetails }) => (
-            <React.Fragment>
-              {console.log("results=>", locationResults)}
-              <View>
-                <TextInput
-                  placeholder="Search a place"
-                  onChangeText={handleTextChange}
-                />
-                {/* <Button
-                  title="X"
-                  onPress={function () {
-                    textInput='';
-                  }}
-                /> */}
-              </View>
-              <ScrollView>
-                {locationResults.map((res) => (
-                  <LocationResultItem
-                    {...res}
-                    key={res.place_id}
-                    fetchDetails={fetchDetails}
-                  />
-                ))}
-              </ScrollView>
-            </React.Fragment>
-          )}
-        </GoogleAutoComplete>
-      </View>
-    </>
+    <GooglePlacesAutocomplete
+      placeholder={'Search'}
+      minLength={3}
+      debounce={500}
+      autoFocus={false}
+      returnKeyType={"default"}
+      fetchDetails={true}
+      styles={{
+        textInputContainer: {
+          backgroundColor: "rgba(0,0,0,0)",
+          borderTopWidth: 0,
+          borderBottomWidth: 0,
+          height : 50,
+          width: "100%",
+        },
+        textInput: {
+          borderBottomColor: "black",
+          borderWidth: 1,
+          marginLeft: 0,
+          marginRight: 0,
+          borderRadius: 20,
+          height: "100%",
+          color: "#5d5d5d",
+          fontSize: 16,
+        },
+        description: {
+          color: 'white',
+          zIndex: 10,
+          height : 50
+        },
+      }}
+      enablePoweredByContainer={false}
+      onPress={(data, details = null) => {
+        console.log("googlemaps=>", details.geometry.location);
+        let lat = details.geometry.location.lat;
+        let lon = details.geometry.location.lng;
+        return Weather_API(lat, lon).then((res) => {
+          SET_WEATHER_STATE(res);
+        });
+      }}
+       query={{
+        key: GOOGLE_API_KEY,
+        language: "en",
+      }}
+    />
   );
-}
+};
+
+export default GooglePlacesComponent;
 
 const styles = StyleSheet.create({
   google: {
