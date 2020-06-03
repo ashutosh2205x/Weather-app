@@ -18,7 +18,7 @@ const GooglePlacesComponent = () => {
 
   return (
     <GooglePlacesAutocomplete
-      placeholder={Math.random().toFixed(5)}
+      placeholder={'Search'}
       minLength={3}
       debounce={500}
       autoFocus={false}
@@ -29,13 +29,23 @@ const GooglePlacesComponent = () => {
           backgroundColor: "rgba(0,0,0,0)",
           borderTopWidth: 0,
           borderBottomWidth: 0,
+          height : 50,
+          width: "100%",
         },
         textInput: {
+          borderBottomColor: "black",
+          borderWidth: 1,
           marginLeft: 0,
           marginRight: 0,
-          height: 38,
+          borderRadius: 20,
+          height: "100%",
           color: "#5d5d5d",
           fontSize: 16,
+        },
+        description: {
+          color: 'white',
+          zIndex: 10,
+          height : 50
         },
       }}
       enablePoweredByContainer={false}
@@ -43,19 +53,14 @@ const GooglePlacesComponent = () => {
         console.log("googlemaps=>", details.geometry.location);
         let lat = details.geometry.location.lat;
         let lon = details.geometry.location.lng;
-        return Weather_API(lat, lon).then((res)=>{
-          SET_WEATHER_STATE(res)
+        return Weather_API(lat, lon).then((res) => {
+          SET_WEATHER_STATE(res);
         });
       }}
-      onKeyPress={()=>{
-        console.log('googlemaps=>',WEATHER_STATE)
-      }}
-      query={{
+       query={{
         key: GOOGLE_API_KEY,
         language: "en",
       }}
-      currentLocation={true}
-      currentLocationLabel="Get my location"
     />
   );
 };
