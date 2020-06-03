@@ -12,7 +12,7 @@ import { Video } from "expo-av";
 import GooglePlacesComponent from "./components/Google-auto-complete/google-auto-complete";
 import { WeatherReport } from "./components/weather-report/weather-report";
 import { Weather_API } from "./api/api";
-const { height } = Dimensions.get("window");
+const { height, width } = Dimensions.get("window");
 import { WeatherContext } from "./api/apiContext";
 import { Footer } from "./components/footer";
 import { Snowflake } from "./static_utils/video";
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     paddingBottom: 100,
   },
   footer: {
-    width: "110%",
+    width: width,
     position: "absolute",
     bottom: 0,
     height: 50,
