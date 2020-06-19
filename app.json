@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "my-rn-ap",
-    "slug": "my-rn-ap",
+    "name": "Weather-App",
+    "slug": "weather-app",
     "platforms": [
       "ios",
       "android",
@@ -23,6 +23,8 @@
     ],
     "ios": {
       "supportsTablet": true
-    }
+    },
+    "description": "",
+    "githubUrl": "https://github.com/ashutosh2205x/weather-app-react-native"
   }
 }

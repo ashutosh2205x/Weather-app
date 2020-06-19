@@ -22,16 +22,16 @@ export const WeatherReport = () => {
             );
           else
             return (
-              console.log("res=>", res),
+              // console.log("res=>", res),
               (
                 <View style={styles.text_container}>
                   <Text style={styles.header2}>{res.name}</Text>
 
                   <Text style={styles.text_portion}>
                     <Text style={styles.title}>Temp :</Text>{" "}
-                    {(res.main.feels_like - 273.15).toFixed(1)-2} °C
+                    {(res.main.feels_like - 273.15).toFixed(2) } °C
                     <Text style={{ color: "red" }}>
-                      &nbsp; &nbsp; {(res.main.temp_max - 273.15).toFixed(1)-1} °C
+                      &nbsp; &nbsp; {(res.main.temp_max - 273.15).toFixed(2)} °C
                       &nbsp;
                     </Text>
                     {/* <Text style={{ color: "cyan" }}>
@@ -45,15 +45,15 @@ export const WeatherReport = () => {
                   </Text>
                   <Text style={styles.text_portion}>
                     <Text style={styles.title}>Pressure :</Text>{" "}
-                    {res.main.pressure} Pa
+                    {(res.main.pressure)/1000} KPa
                   </Text>
                   <Text style={styles.text_portion}>
                     <Text style={styles.title}> Sun rise : </Text>{" "}
-                    {new Date(res.sys.sunrise).toLocaleTimeString('en-US') } A.M.
+                    {new Date(new Date(res.sys.sunrise*1000).toString()).toLocaleTimeString() } A.M.
                   </Text>
                   <Text style={styles.text_portion}>
                     <Text style={styles.title}> Sun set :</Text>{" "}
-                    {Date(res.sys.sunset)}
+                    {new Date(new Date(res.sys.sunset*1000).toString()).toLocaleTimeString() } P.M.
                   </Text>
                 </View>
               )

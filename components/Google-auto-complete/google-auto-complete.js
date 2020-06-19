@@ -50,7 +50,7 @@ const GooglePlacesComponent = () => {
       }}
       enablePoweredByContainer={false}
       onPress={(data, details = null) => {
-        console.log("googlemaps=>", details.geometry.location);
+        // console.log("googlemaps=>", details.geometry.location);
         let lat = details.geometry.location.lat;
         let lon = details.geometry.location.lng;
         return Weather_API(lat, lon).then((res) => {

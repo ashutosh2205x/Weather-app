@@ -13,24 +13,21 @@ import GooglePlacesComponent from "./components/Google-auto-complete/google-auto
 import { WeatherReport } from "./components/weather-report/weather-report";
 import { Weather_API } from "./api/api";
 const { height, width } = Dimensions.get("window");
-import { WeatherContext } from "./api/apiContext";
+import { WeatherContext, TEMP_CONTEXT } from "./api/apiContext";
 import { Footer } from "./components/footer";
 import { Snowflake } from "./static_utils/video";
+
 export default function App() {
   const [WEATHER_STATE, SET_WEATHER_STATE] = useState({});
   const value = { WEATHER_STATE, SET_WEATHER_STATE };
-  const [BCKGRND_THEME, SET_BCKGRND_THEME] = useState("");
+  const [TEMP, SET_TEMP] = useState(0);
+  const TEMP_VAL = { TEMP, SET_TEMP };
+
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
-        console.log(
-          "geo location ==>",
-          pos.coords.latitude,
-          pos.coords.longitude
-        );
-
         Weather_API(pos.coords.latitude, pos.coords.longitude).then((data) => {
-          return SET_WEATHER_STATE(data);
+          return SET_WEATHER_STATE(data), SET_TEMP(data.main.feels_like), console.log(TEMP_VAL);
         });
       },
       (error) => console.log("error message=>", error.message),
@@ -39,23 +36,23 @@ export default function App() {
   }, []);
   return (
     <>
-      {console.log("app context=>", Object.keys(value.WEATHER_STATE).length)}
       <View style={styles.app}>
-        <Snowflake />
+        <TEMP_CONTEXT.Provider value={TEMP_VAL}>
+          <Snowflake />
+        </TEMP_CONTEXT.Provider>
         <View style={styles.header_container}>
           <HeaderText />
         </View>
         <View style={styles.body_container}>
           <WeatherContext.Provider value={value}>
-            {/* <View style={styles.google_container}> */}
             <GooglePlacesComponent />
-            {/* </View> */}
             <WeatherReport />
           </WeatherContext.Provider>
-          <View style={styles.footer}>
+          
+        </View>
+        <View style={styles.footer}>
             <Footer />
           </View>
-        </View>
       </View>
     </>
   );
@@ -89,8 +86,8 @@ const styles = StyleSheet.create({
     width: width,
     position: "absolute",
     bottom: 0,
-    height: 50,
-    bottom: 0,
+    left: 0,
+    right: 0,
     backgroundColor: "black",
     textAlign: "center",
   },
