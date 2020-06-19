@@ -1,7 +1,7 @@
 node_modules/**/*
 
 
-keys.js
+key.js
 
 .expo/*
 npm-debug.*
